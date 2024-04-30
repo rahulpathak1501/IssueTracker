@@ -1,0 +1,20 @@
+<!-- views/homepage.ejs -->
+
+<link rel="stylesheet" href="/homestyles.css" />
+<h1>Projects</h1>
+<ul>
+  <% for (const project of projects) { %>
+  <li>
+    <h2><%= project.name %></h2>
+    <p>
+      Description: <%= project.description %>
+
+      <br />
+      Issue Count: <%= project.issues.length %>
+    </p>
+    <a href="/projects/<%= project._id %>">Details</a>
+  </li>
+  <% } %>
+</ul>
+
+<a href="/projects/new">Create New Project</a>

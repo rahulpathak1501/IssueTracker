@@ -1,0 +1,152 @@
+<!-- views/projects/projectDetails.ejs -->
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Project Title</title>
+  <link rel="stylesheet" href="/styles.css">
+
+<script>
+
+function applyFilters() {
+  const labels = document.querySelectorAll('input[name="labels"]:checked');
+  const author = document.getElementById("author").value;
+  const search = document.getElementById("search").value;
+
+  console.log(author, search)
+
+  // Convert Node List of labels to an array of label IDs
+  const labelIds = Array.from(labels).map((label) => label.value);
+
+  // Use labels, author, and search to make an AJAX request to the server
+  const xhr = new XMLHttpRequest();
+xhr.open(
+  "GET",
+  `/projects/${projectId}/issues?labels=${labelIds.join(",")}&author=${author}&search=${search}`,
+  true
+);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      const response = JSON.parse(xhr.responseText);
+      // Update the displayed issues based on the response
+      updateDisplayedIssues(response.issues);
+    }
+  };
+  xhr.send();
+}
+
+function updateDisplayedIssues(issues) {
+  console.log("Update the table");
+  const tbody = document.querySelector("#issuesTable tbody");
+  tbody.innerHTML = ""; // Clear existing rows
+
+  issues.forEach((issue) => {
+    const row = document.createElement("tr");
+
+    // Add logic to populate the table cells with issue details
+    const idCell = document.createElement("td");
+    idCell.textContent = issue._id;
+    row.appendChild(idCell);
+
+    const titleCell = document.createElement("td");
+    titleCell.textContent = issue.title;
+    row.appendChild(titleCell);
+
+    const descriptionCell = document.createElement("td");
+    descriptionCell.textContent = issue.description;
+    row.appendChild(descriptionCell);
+
+    const statusCell = document.createElement("td");
+    statusCell.textContent = issue.status;
+    row.appendChild(statusCell);
+
+    const labelsCell = document.createElement("td");
+    issue.labels.forEach((label) => {
+      const labelSpan = document.createElement("span");
+      labelSpan.textContent = label.name;
+      labelsCell.appendChild(labelSpan);
+    });
+    row.appendChild(labelsCell);
+
+    const authorCell = document.createElement("td");
+    authorCell.textContent = issue.author ? issue.author.username : "N/A";
+    row.appendChild(authorCell);
+
+    tbody.appendChild(row);
+  });
+}
+
+</script>
+
+</head>
+<body>
+
+
+<h1><%= project.name %> Details</h1>
+
+<p>
+  <strong>Description:</strong> <%= project.description %><br>
+
+  <strong>Created At:</strong> <%= project.createdAt %><br>
+</p>
+
+<!-- Add a form for filtering by labels -->
+
+<form class="filterForm">
+  <label for="labels">Filter by Labels:</label>
+  <% for (const label of allLabels) { %>
+    <input type="checkbox" name="labels" value="<%= label._id %>">
+    <%= label.name %> 
+  <% } %>
+  <button type="button" onclick="applyFilters()">Apply Filters</button>
+</form>
+
+<!-- Add an input for filtering by author -->
+<form class="authorForm">
+  <label for="author">Filter by Author:</label>
+  <input type="text" name="author" class="author">
+  <button type="button" onclick="applyFilters()">Apply Filters</button>
+</form>
+
+<!-- Add an input for searching by title and description -->
+<form class="searchForm">
+  <label for="search">Search by Title or Description:</label>
+  <input type="text" name="search" class="search">
+  <button type="button" onclick="applyFilters()">Search</button>
+</form>
+
+<h2>Issues:</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Status</th>
+      <th>Labels</th>
+      <th>Author</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for (const issue of issues) { %>
+      <tr>
+        <td><%= issue._id %></td>
+        <td><%= issue.title %></td>
+        <td><%= issue.description %></td>
+        <td><%= issue.status %></td>
+        <td>
+          <% for (const label of issue.labels) { %>
+            <%= label.name %> <br>
+          <% } %>
+        </td>
+        <td><%= issue.author ? issue.author.username : 'N/A' %></td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<a href="/projects/<%= project._id %>/issues/new">Create New Issue</a>
+</body>
+

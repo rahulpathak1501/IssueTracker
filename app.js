@@ -12,7 +12,7 @@ const routes = require("./routes/index"); // Import your routes
 // const expressValidator = require("express-validator"); // Import express-validator
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3123;
 
 // Connect to MongoDB (make sure your MongoDB server is running)
 mongoose.connect("mongodb://localhost:27017/bug_tracker", {

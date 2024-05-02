@@ -2,9 +2,12 @@ const mongoose = require("mongoose");
 const User = require("../models/user");
 const Project = require("../models/project");
 const Issue = require("../models/issue");
+require("dotenv").config();
 
 async function initializeDatabase() {
-  await mongoose.connect("mongodb://localhost:27017/bug_tracker", {
+  const uri = `mongodb+srv://rahul3pathak1997:${process.env.MONGODB_PASSWORD}@cluster0.84afpga.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+
+  await mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });

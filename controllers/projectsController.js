@@ -82,10 +82,9 @@ exports.getProjectDetails = async (req, res) => {
 
     // Validate if projectId is a valid ObjectId
     if (projectId !== "new" && !mongoose.Types.ObjectId.isValid(projectId)) {
-      // Handle the case where projectId is not a valid ObjectId
       return res.status(404).json({ message: "Invalid project ID." });
     }
-
+    console.log(req.query);
     const { labels, author, search } = req.query;
 
     if (projectId === "new") {
@@ -101,7 +100,6 @@ exports.getProjectDetails = async (req, res) => {
 
     //console.log(allLabels);
 
-    // Filter by labels using $and operator
     if (labels) {
       query.labels = { $in: labels.split(",") }; // Convert comma-separated string to array
     }

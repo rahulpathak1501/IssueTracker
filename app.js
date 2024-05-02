@@ -1,5 +1,5 @@
 //app.js
-
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -7,15 +7,16 @@ const expressSession = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
-const User = require("./models/user"); // Make sure to import your User model
-const routes = require("./routes/index"); // Import your routes
+const User = require("./models/user");
+const routes = require("./routes/index");
 // const expressValidator = require("express-validator"); // Import express-validator
 
 const app = express();
 const PORT = 3123;
 
-// Connect to MongoDB (make sure your MongoDB server is running)
-mongoose.connect("mongodb://localhost:27017/bug_tracker", {
+// Connect to MongoDB
+const uri = `mongodb+srv://rahul3pathak1997:${process.env.MONGODB_PASSWORD}@cluster0.84afpga.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });

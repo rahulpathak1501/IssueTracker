@@ -84,7 +84,7 @@ exports.getProjectDetails = async (req, res) => {
     if (projectId !== "new" && !mongoose.Types.ObjectId.isValid(projectId)) {
       return res.status(404).json({ message: "Invalid project ID." });
     }
-    console.log(req.query);
+    console.log(projectId);
     const { labels, author, search } = req.query;
 
     if (projectId === "new") {
